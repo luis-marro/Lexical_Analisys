@@ -11,13 +11,13 @@ import jflex.*;
 public class Lexical {
 
     // class constructor
-    public Lexical(String path) throws IOException{
-        jflex.Main.generate(new File(path));
+    public Lexical() throws IOException{
+        jflex.Main.generate(new File("src/Lexical/lexer.flex"));
     }
 
     // Method that analyzes a file collecting tokens until the end is reached.
     public List<String> transform(String input) throws IOException{
-        FileManager manager = new FileManager(); 
+        FileManager manager = new FileManager();
         List<String> output = new LinkedList<String>();
 
         try{
@@ -33,5 +33,9 @@ public class Lexical {
         }catch (IOException ex){
 
         }
+
+        manager.writeNewFile(input, output);
+        return output;
     }
+
 }

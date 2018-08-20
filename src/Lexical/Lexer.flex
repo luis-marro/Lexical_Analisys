@@ -1,6 +1,6 @@
 package Lexical;
 
-import java.io;
+import java.io.*;
 %%
 %public
 %class Yylex
@@ -9,22 +9,21 @@ import java.io;
 %column
 %type String
 
-LineTerminator = \r|\n|\r\n
-nputCharacter = [^\r\n]
-WhiteSpace     = {LineTerminator} | [ \t\f]
+symbol = [\/%<>=!;.,\[\]()\{\}]
+Ignored = [\t\r\f\n]
 %%
 
-[\t\r\f]+
+{Ignored}
 {
     // accion vacia: se ignoran los espacios y tabuladores
 }
 
 “0x”|"0X"[0-9A-Fa-f]+
 {
-    return “numero_hexadecimal ” + yytext() + ” en linea: “ + yyline + ” columna “ + yycolumn ;
+    return "numero_hexadecimal " + yytext() + " en linea: " + yyline + " columna " + yycolumn ;
 }
 
-[0-9]+
+[0-9][0-9]*
 {
     return "numero entero " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
 }
@@ -119,7 +118,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
     return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
 }
 
-[+-*\/%<>=!;.,\[\]()\{\}]
+{symbol}
 {
     return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
 }
@@ -144,7 +143,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
     return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
 }
 
-\\||
+\|\|
 {
     return "palabra " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
 }
@@ -160,6 +159,16 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 }
 
 "\\()"
+{
+    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+}
+
+"\+"
+{
+    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+}
+
+"\-"
 {
     return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
 }
@@ -191,7 +200,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 [0-9_][A-Za-z0-9_]*
 {
-    return "*** Error linea " + ttline + " identificador inválido ";
+    return "*** Error linea " + yyline + " identificador inválido ";
 }
 
 .
