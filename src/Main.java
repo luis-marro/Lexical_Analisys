@@ -24,4 +24,11 @@ public class Main {
             }
         }
     }
+    //TODO
+    /* fix reserved words like class and int
+       make the output path depend on the input path
+       test other regular expressions
+       fix whitespace recognized as invalid token
+       make output file more homogeneous looking
+    */
 }
