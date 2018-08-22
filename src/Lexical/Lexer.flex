@@ -9,188 +9,250 @@ import java.io.*;
 %column
 %type String
 
+%{
+    string token = "";
+    int fixed = 0;
+}%
+
 symbol = [\/%<>=!;.,\[\]()\{\}]
 Ignored = [\t\r\f\n]
+LineTerminator = \r|\n|\r\n
+WhiteSpace     = {LineTerminator} | [ \t\f]
 %%
 
-{Ignored}
+{Ignored} | {WhiteSpace}
 {
     // accion vacia: se ignoran los espacios y tabuladores
 }
 
+// Ignore comments
+\\//
+{
+    // Empty action, ignore single line comments
+}
+
+// Multiline Comments
+/\*.\*/
+{
+    // for testing
+    return "Comentario multilinea brother";
+}
+
+
 “0x”|"0X"[0-9A-Fa-f]+
 {
-    return "numero_hexadecimal " + yytext() + " en linea: " + yyline + " columna " + yycolumn ;
+    token = yytext();
+    fixed = token.lenght() - 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal";
 }
 
 [0-9][0-9]*
 {
-    return "numero entero " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = token.lenght() - 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed +  " is intConstant  " + "(value = " + token + ")";
 }
 
-"int"
+"int" | "int"{WhiteSpace}
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 2;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is int";
 }
 
-"double"
+"double"{WhiteSpace} | "double"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 5;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is double";
 }
 
-"void"
+"void"{WhiteSpace} | "void"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 3;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is void";
 }
 
-"string"
+"string"{WhiteSpace} | "string"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 5;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is string";
 }
 
-"class"
+"class"{WhiteSpace} | "class"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 4;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is class";
 }
 
-"interface"
+"interface"{WhiteSpace} | "interface"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 8;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is interface";
 }
 
-"null"
+"null"{WhiteSpace} | "null"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 3;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is null";
 }
 
-"this"
+"this"{WhiteSpace} | "this"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 3;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is this";
 }
 
-"extends"
+"extends"{WhiteSpace} | "extends"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 6;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is extends";
 }
 
-"implements"
+"implements"{WhiteSpace} | "implements"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 9;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is implements";
 }
 
-"for"
+"for"{WhiteSpace} | "for"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 2;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is for";
 }
 
-"while"
+"while"{WhiteSpace} | "while"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 4;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is while";
 }
 
-"if"
+"if"{WhiteSpace} "if"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is if";
 }
 
-"else"
+"else"{WhiteSpace} "else"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 3;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is else";
 }
 
-"return"
+"return"{WhiteSpace} "return"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 5;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is return";
 }
 
-"break"
+"break"{WhiteSpace} | "break"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 4;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is break";
 }
 
-"New"
+"New"{WhiteSpace} | "New"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 2;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is New";
 }
 
-"NewArray"
+"NewArray"{WhiteSpace} "NewArray"
 {
-    return "palabra clave " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 7;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is NewArray";
 }
 
 {symbol}
 {
-    return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    return yytext() + " line " + yyline + " cols " + yycolumn + " is " + "'" + token + "'";
 }
 
 "\<="
 {
-    return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed +  " is " + "'" + token + "'";
 }
 
 "\>="
 {
-    return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
 }
 
 "!="
 {
-    return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
 }
 
 "&&"
 {
-    return "operador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
 }
 
 \|\|
 {
-    return "palabra " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'||'";
 }
 
 "\\[]"
 {
-    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'[]'";
 }
 
 "\\{}"
 {
-    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'{}'";
 }
 
 "\\()"
 {
-    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'()'";
 }
 
 "\+"
 {
-    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    return yytext() + " line " + yyline + " cols " + yycolumn + " is " + "'+'";
 }
 
 "\-"
 {
-    return "Simbolo " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    return yytext() + " line " + yyline + " cols " + yycolumn + " is " + "'-'";
 }
 
 "true"
 {
-    return "constante booleana " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    fixed = yycolumn + 3;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = true)";
 }
 
 "false"
 {
-    return "constante booleana " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+     fixed = yycolumn + 4;
+     return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = false)";
 }
 
-[0-9][0-9]*"\."[0-9][0-9]*
+[0-9][0-9]*"\."[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
 {
-    return "Punto Flotante " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = yycolumn + token.lenght() - 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + "is float (value = " + token + ")";
 }
 
-[A-Za-z][A-Za-z0-9_]*[1, 31]
+[A-Za-z][A-Za-z0-9_]*[1, 31] | [A-Za-z][A-Za-z0-9_]*[1, 31]{WhiteSpace}
 {
-    return "identificador " + yytext() + " en linea: " + yyline+ " columna " + yycolumn;
+    token = yytext();
+    fixed = yycolumn + token.lenght() - 1;
+    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + "is identifier"
 }
 
 [A-Za-z][A-Za-z0-9_]*[32, 1000]
@@ -198,7 +260,7 @@ Ignored = [\t\r\f\n]
     return "*** Error linea " + yyline + " identificador muy largo ";
 }
 
-[0-9_][A-Za-z0-9_]*
+[0-9_.][A-Za-z0-9_.]*
 {
     return "*** Error linea " + yyline + " identificador inválido ";
 }
