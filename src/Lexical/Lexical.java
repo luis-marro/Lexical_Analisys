@@ -19,6 +19,7 @@ public class Lexical {
     public List<String> transform(String input) throws IOException{
         FileManager manager = new FileManager();
         List<String> output = new LinkedList<String>();
+        manager.trimFile(input);
 
         try{
             Yylex lex = new Yylex(new FileReader(input));
@@ -31,7 +32,7 @@ public class Lexical {
                 token = lex.yylex();
             }
         }catch (IOException ex){
-
+            System.out.println("Trono");
         }
 
         manager.writeNewFile(input, output);
