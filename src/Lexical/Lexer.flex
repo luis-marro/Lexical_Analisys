@@ -17,6 +17,14 @@ quote = [\"]
 %{
     String token = "";
     int fixed = 0;
+
+    private String longIdentifier(String text){
+        if(text.length() > 31){
+            return text.substring(0, 31);
+        }else{
+            return text;
+        }
+    }
 %}
 %%
 
@@ -260,15 +268,11 @@ quote = [\"]
 
 [A-Za-z][A-Za-z0-9_]*[1, 31] | [A-Za-z][A-Za-z0-9_]*{WhiteSpace}[1, 31]
 {
-    token = yytext();
+    token = longIdentifier(yytext());
     fixed = yycolumn + token.length() - 2;
-    return yytext() + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
+    return token + " line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
 }
 
-[A-Za-z][A-Za-z0-9_][32, 100] | [A-Za-z][A-Za-z0-9_]{WhiteSpace}[32, 100]
-{
-    return "*** Error linea " + yyline + " identificador muy largo ";
-}
 
 [0-9_.][A-Za-z0-9_.]*
 {
