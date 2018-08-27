@@ -26,9 +26,9 @@ public class Main {
     }
     //TODO
     /*
-       make output file more homogeneous looking
        fix identifiers with dots
-       add error handling for multiline comments written bad
+       add error handling for multiline comments with errors
+       fixed double brackets, parenthesis and curly braces.
        add GUI
     */
 }
