@@ -26,9 +26,8 @@ public class Main {
     }
     //TODO
     /*
-       fix identifiers with dots
        add error handling for multiline comments with errors
-       fixed double brackets, parenthesis and curly braces.
+       Fix error with strings as method parameters 
        add GUI
     */
 }

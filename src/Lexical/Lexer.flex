@@ -9,7 +9,7 @@ import java.io.*;
 %column
 %type String
 
-symbol = [%<>=!;.,\[\]()\{\}]
+symbol = [%<>=!;.\[\]()\{\}]
 Ignored = [\t\r\f\n]
 LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
@@ -54,15 +54,6 @@ quote = [\"]
     // ignore multiline comments
 }
 
-
-“0x”|"0X"[0-9A-Fa-f]+
-{
-    token = yytext();
-    fixed = token.length() - 1;
-    whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal";
-}
-
 [0-9][0-9]*
 {
     token = yytext();
@@ -74,14 +65,14 @@ quote = [\"]
 "int" | "int"{WhiteSpace}
 {
     fixed = yycolumn + 2;
-    whites = blankSpaces(yytext().length() - 1);
+    whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is int";
 }
 
 "double"{WhiteSpace} | "double"
 {
     fixed = yycolumn + 5;
-    whites = blankSpaces(yytext().length() - 1);
+    whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double";
 }
 
@@ -95,7 +86,7 @@ quote = [\"]
 "string"{WhiteSpace} | "string"
 {
     fixed = yycolumn + 5;
-    whites = blankSpaces(yytext().length() - 1);
+    whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string";
 }
 
@@ -222,7 +213,7 @@ quote = [\"]
 {
     token = yytext();
     whites = blankSpaces(1);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";
 }
 
 "\<="
@@ -289,6 +280,15 @@ quote = [\"]
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'*'";
  }
 
+ // Hexadecimal 0x12aE
+ <YYINITIAL>0[xX][0-9a-fA-F]*
+ {
+     token = yytext();
+     fixed = token.length() - 1;
+     whites = blankSpaces(token.length());
+     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal " + "(value = " + token + ")";
+ }
+
 "true"
 {
     fixed = yycolumn + 3;
@@ -311,8 +311,14 @@ quote = [\"]
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is float (value = " + token + ")";
 }
 
+<YYINITIAL>"\."
+{
+    token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ".";
+}
 
-[A-Za-z][A-Za-z0-9_]*[1, 31] | [A-Za-z][A-Za-z0-9_]*{WhiteSpace}[1, 31]
+[A-Za-z][_A-Za-z0-9]* | [A-Za-z][_A-Za-z0-9]*{WhiteSpace}
 {
     token = longIdentifier(yytext());
     fixed = yycolumn + token.length() - 2;
@@ -320,10 +326,16 @@ quote = [\"]
     return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
 }
 
-
-[0-9_.][A-Za-z0-9_.]*
+[0-9_][A-Za-z0-9_]*
 {
     return "*** Error en linea " + yyline + " identificador inválido: " + yytext();
+}
+
+<YYINITIAL>{WhiteSpace}?"\,"{WhiteSpace}*
+{
+    token = yytext();
+    whites = blankSpaces(token.length());
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ".";
 }
 
 // string rules
