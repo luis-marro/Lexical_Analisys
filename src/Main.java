@@ -27,7 +27,6 @@ public class Main {
     //TODO
     /*
        make output file more homogeneous looking
-       multiLine comment fix
        Fix identifier over 31 chars
        fix identifiers with dots
     */

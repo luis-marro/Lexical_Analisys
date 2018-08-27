@@ -25,7 +25,16 @@ quote = [\"]
     // accion vacia: se ignoran los espacios y tabuladores
 }
 
+// ignore the comments
+<YYINITIAL>"//".*
+{
+    // ignore single line comments
+}
 
+<YYINITIAL>\/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\*\/
+{
+    // ignore multiline comments
+}
 
 
 “0x”|"0X"[0-9A-Fa-f]+
@@ -220,9 +229,14 @@ quote = [\"]
 }
 
 "\-"
-{
-    return yytext() + " line " + yyline + " cols " + yycolumn + " is " + "'-'";
-}
+ {
+     return yytext() + " line " + yyline + " cols " + yycolumn + " is " + "'-'";
+ }
+
+ "\*"
+ {
+     return yytext() + " line " + yyline + " cols " + yycolumn + " is " + "'*'";
+ }
 
 "true"
 {

@@ -20,7 +20,6 @@ public class Lexical {
         FileManager manager = new FileManager();
         List<String> output = new LinkedList<String>();
         manager.trimFile(input);
-
         try{
             Yylex lex = new Yylex(new FileReader(input));
             String token;
