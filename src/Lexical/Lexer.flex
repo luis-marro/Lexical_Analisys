@@ -54,6 +54,12 @@ quote = [\"]
     // ignore multiline comments
 }
 
+// not closed comment
+<YYINITIAL>\/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\* | \/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\/
+{
+    return "*** Error en linea " + yyline + " comentario multilinea sin cerrar";
+}
+
 [0-9][0-9]*
 {
     token = yytext();
@@ -345,6 +351,12 @@ quote = [\"]
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string variable";
+}
+
+// not closed string
+{quote}.*(\n|;)
+{
+    return "*** Error en linea " + yyline + " variable String sin cerrar " + yytext();
 }
 
 .

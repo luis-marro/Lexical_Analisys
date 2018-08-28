@@ -68,6 +68,7 @@ public class Analyzer_GUI extends javax.swing.JFrame{
                         System.out.println("Se ha analizado el archivo");
 
                         infoBox("Archivo convertido con éxito", "Archivo convertido");
+                        txtFilePath.setText("Ingresar ruta del archivo...");
                     } catch (IOException ex) {
                         infoBox("Error, no se ha seleccionado un archivo", "Error");
                     }
