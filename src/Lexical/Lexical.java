@@ -9,9 +9,15 @@ import java.util.List;
 
 public class Lexical {
 
+    private String finalPath;
+
     // class constructor
     public Lexical() throws IOException{
         jflex.Main.generate(new File("src/Lexical/lexer.flex"));
+    }
+
+    public String getFinalPath(){
+        return finalPath;
     }
 
     // Method that analyzes a file collecting tokens until the end is reached.
@@ -19,6 +25,7 @@ public class Lexical {
         FileManager manager = new FileManager();
         List<String> output = new LinkedList<String>();
         manager.trimFile(input);
+        finalPath = manager.getFinalPath();
         try{
             Yylex lex = new Yylex(new FileReader(input));
             String token;
@@ -36,5 +43,6 @@ public class Lexical {
         manager.writeNewFile(input, output);
         return output;
     }
+
 
 }

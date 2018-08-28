@@ -6,6 +6,13 @@ import java.util.LinkedList;
 
 public class FileManager {
 
+
+    private String finalPath;
+
+    public String getFinalPath(){
+        return finalPath;
+    }
+
     /*
     Class constructor
      */
@@ -40,7 +47,8 @@ public class FileManager {
     public void writeNewFile(String path, List<String> tokens){
         try {
             String extension = FilenameUtils.getExtension(path);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(path.replace(extension, "out")));
+            finalPath = path.replace(extension, "out");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(finalPath));
             // Print the tokens to the file
             for(int i = 0; i < tokens.size(); i++){
                 writer.write(tokens.get(i) + "\n");

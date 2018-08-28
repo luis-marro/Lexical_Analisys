@@ -22,7 +22,7 @@ string respuesta = "si funciona ve";
 para la prueba nada mas*/
 double d = 12.2;
 double exp = 12.2E+6;
-
+string error1 = "deberia de fallar;
 private int metodoAlAzar(int ojala, string si, double salga){
 salga = 10.5E-9;
 ojala = 0x12aE;
