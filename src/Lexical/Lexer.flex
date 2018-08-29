@@ -54,8 +54,11 @@ quote = [\"]
     // ignore multiline comments
 }
 
-// not closed comment
-
+// not closed multiline comment
+<YYINITIAL>\/\*{WhiteSpace}?.*[^*/]
+{
+    return yytext() + "not closed comment";
+}
 
 [0-9][0-9]*
 {

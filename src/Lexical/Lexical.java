@@ -33,7 +33,8 @@ public class Lexical {
 
             while(token != null){
                 output.add(token);
-
+                if(token.contains("not closed comment"))
+                    break;
                 token = lex.yylex();
             }
         }catch (IOException ex){
