@@ -55,10 +55,7 @@ quote = [\"]
 }
 
 // not closed comment
-<YYINITIAL>\/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\* | \/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\/
-{
-    return "*** Error en linea " + yyline + " comentario multilinea sin cerrar";
-}
+
 
 [0-9][0-9]*
 {
@@ -329,7 +326,10 @@ quote = [\"]
     token = longIdentifier(yytext());
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
-    return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
+    if(yytext().length() <= 31)
+        return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
+    else
+        return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier (truncated)";
 }
 
 [0-9_][A-Za-z0-9_]*
@@ -337,15 +337,15 @@ quote = [\"]
     return "*** Error en linea " + yyline + " identificador inválido: " + yytext();
 }
 
-<YYINITIAL>{WhiteSpace}?"\,"{WhiteSpace}*
+<YYINITIAL>{WhiteSpace}*"\,"{WhiteSpace}*
 {
     token = yytext();
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ".";
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ",";
 }
 
 // string rules
-{quote}.*{quote}
+{quote}.*[^\"]{quote}
 {
     token = yytext();
     fixed = yycolumn + token.length() - 2;
@@ -353,11 +353,7 @@ quote = [\"]
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string variable";
 }
 
-// not closed string
-{quote}.*(\n|;)
-{
-    return "*** Error en linea " + yyline + " variable String sin cerrar " + yytext();
-}
+
 
 .
 {

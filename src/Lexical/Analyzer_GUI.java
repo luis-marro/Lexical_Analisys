@@ -36,6 +36,7 @@ public class Analyzer_GUI extends javax.swing.JFrame{
         setLocationRelativeTo(null);
         add(mainPanel);
         pack();
+        setLocationRelativeTo(null);
 
         btOpenFile.addActionListener(new ActionListener() {
             @Override
