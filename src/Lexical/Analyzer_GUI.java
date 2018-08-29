@@ -18,6 +18,7 @@ public class Analyzer_GUI extends javax.swing.JFrame{
     private JButton btOpenFile;
     private JButton btEvaluate;
     private JPanel mainPanel;
+    private JTextArea txtErrors;
     private String path;
 
 
@@ -42,6 +43,7 @@ public class Analyzer_GUI extends javax.swing.JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                     JFileChooser choice = new JFileChooser();
+                    txtErrors.setText("Errores Encontrados:");
                     if (choice.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                         try {
                             path = choice.getSelectedFile().getAbsolutePath();
@@ -50,7 +52,7 @@ public class Analyzer_GUI extends javax.swing.JFrame{
                             infoBox("Archivo no valido", "Error");
                         }
                     } else {
-                        infoBox("No selecciono un archivo", "Error");
+                        infoBox("No seleccionó un archivo", "Error");
                     }
 
             }
@@ -70,6 +72,13 @@ public class Analyzer_GUI extends javax.swing.JFrame{
 
                         infoBox("Archivo convertido con éxito", "Archivo convertido");
                         txtFilePath.setText("Ingresar ruta del archivo...");
+                        // Display the errors in the display if any.
+                        if(lex.getErrors().size() != 0){
+                            txtErrors.append("\n");
+                            for(int i = 0; i < lex.getErrors().size(); i++){
+                                txtErrors.append(lex.getErrors().get(i) + "\n");
+                            }
+                        }
                     } catch (IOException ex) {
                         infoBox("Error, no se ha seleccionado un archivo", "Error");
                     }

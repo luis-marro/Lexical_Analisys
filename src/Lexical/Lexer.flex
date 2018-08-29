@@ -1,6 +1,8 @@
 package Lexical;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 %%
 %public
 %class Yylex
@@ -18,6 +20,11 @@ quote = [\"]
     String token = "";
     int fixed = 0;
     String whites = "";
+    public List<String> errors = new LinkedList<String>();
+
+    public List<String> getError(){
+          return errors;
+    }
 
     private String longIdentifier(String text){
         if(text.length() > 31){
@@ -57,7 +64,8 @@ quote = [\"]
 // not closed multiline comment
 <YYINITIAL>\/\*{WhiteSpace}?.*[^*/]
 {
-    return yytext() + "not closed comment";
+    errors.add(yytext() + "comment not closed")
+    return yytext() + "comment not closed";
 }
 
 [0-9][0-9]*
@@ -337,6 +345,7 @@ quote = [\"]
 
 [0-9_][A-Za-z0-9_]*
 {
+    errors.add("*** Error en linea " + yyline + " identificador inválido: " + yytext());
     return "*** Error en linea " + yyline + " identificador inválido: " + yytext();
 }
 
@@ -360,6 +369,7 @@ quote = [\"]
 
 .
 {
+    errors.add("*** Error en linea " + yyline + " caracter no reconocido " + yytext());
     return "*** Error en linea " + yyline + " caracter no reconocido " + yytext();
 }
 

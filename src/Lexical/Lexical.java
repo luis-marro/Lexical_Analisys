@@ -10,10 +10,15 @@ import java.util.List;
 public class Lexical {
 
     private String finalPath;
+    private List<String> errors;
 
     // class constructor
     public Lexical() throws IOException{
         jflex.Main.generate(new File("src/Lexical/lexer.flex"));
+    }
+
+    public List<String> getErrors(){
+        return errors;
     }
 
     public String getFinalPath(){
@@ -37,6 +42,7 @@ public class Lexical {
                     break;
                 token = lex.yylex();
             }
+            errors = lex.getError();
         }catch (IOException ex){
             System.out.println("Trono");
         }
