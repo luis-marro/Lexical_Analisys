@@ -56,18 +56,18 @@ public class Yylex {
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\2\3\1\1\1\4\1\5\1\6"+
     "\16\7\5\2\2\1\1\10\1\11\1\6\1\12\1\13"+
-    "\4\0\1\14\2\0\3\7\1\15\20\7\1\16\1\17"+
-    "\1\20\1\21\1\22\1\23\1\24\2\25\4\26\1\0"+
-    "\1\26\1\0\1\27\1\30\2\15\14\7\1\31\2\7"+
-    "\1\32\4\26\2\0\1\33\1\0\2\30\2\7\1\34"+
-    "\1\35\1\36\4\7\1\37\3\7\2\31\2\7\2\32"+
-    "\1\7\5\0\1\33\1\27\1\0\2\7\2\34\2\36"+
-    "\1\7\1\40\3\7\2\37\2\7\1\41\1\42\1\43"+
-    "\1\7\2\33\2\7\1\44\2\40\1\0\1\7\1\45"+
-    "\1\7\2\41\2\43\3\7\2\44\1\0\1\46\2\45"+
-    "\5\7\1\0\2\46\1\0\1\7\1\47\1\7\1\50"+
-    "\1\0\2\7\2\47\1\51\2\0\2\51\4\0\1\52"+
-    "\4\0\1\53";
+    "\4\0\1\14\1\0\1\15\3\7\1\16\20\7\1\17"+
+    "\1\20\1\21\1\22\1\23\1\24\1\25\2\26\4\27"+
+    "\1\0\1\27\1\0\1\15\1\30\2\16\14\7\1\31"+
+    "\2\7\1\32\4\27\2\0\1\33\1\0\2\30\2\7"+
+    "\1\34\1\35\1\36\4\7\1\37\3\7\2\31\2\7"+
+    "\2\32\1\7\5\0\1\33\1\15\1\0\2\7\2\34"+
+    "\2\36\1\7\1\40\3\7\2\37\2\7\1\41\1\42"+
+    "\1\43\1\7\2\33\2\7\1\44\2\40\1\0\1\7"+
+    "\1\45\1\7\2\41\2\43\3\7\2\44\1\0\1\46"+
+    "\2\45\5\7\1\0\2\46\1\0\1\7\1\47\1\7"+
+    "\1\50\1\0\2\7\2\47\1\51\2\0\2\51\4\0"+
+    "\1\52\4\0\1\53";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[212];
@@ -388,15 +388,15 @@ public class Yylex {
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\1\0\2\11\4\1\1\11\26\1\2\11\3\1\4\0"+
-    "\1\1\2\0\1\11\23\1\6\11\2\1\1\11\4\1"+
-    "\1\0\1\11\1\0\2\1\1\11\25\1\2\0\1\1"+
-    "\1\0\1\11\16\1\1\11\3\1\1\11\2\1\5\0"+
-    "\2\1\1\0\2\1\1\11\1\1\1\11\6\1\1\11"+
-    "\10\1\1\11\3\1\1\11\1\1\1\0\3\1\1\11"+
-    "\1\1\1\11\4\1\1\11\1\1\1\0\1\1\1\11"+
-    "\6\1\1\0\1\11\1\1\1\0\3\1\1\11\1\0"+
-    "\2\1\1\11\2\1\2\0\1\11\1\1\4\0\1\11"+
-    "\4\0\1\11";
+    "\1\1\1\0\1\1\1\11\23\1\6\11\2\1\1\11"+
+    "\4\1\1\0\1\11\1\0\2\1\1\11\25\1\2\0"+
+    "\1\1\1\0\1\11\16\1\1\11\3\1\1\11\2\1"+
+    "\5\0\2\1\1\0\2\1\1\11\1\1\1\11\6\1"+
+    "\1\11\10\1\1\11\3\1\1\11\1\1\1\0\3\1"+
+    "\1\11\1\1\1\11\4\1\1\11\1\1\1\0\1\1"+
+    "\1\11\6\1\1\0\1\11\1\1\1\0\3\1\1\11"+
+    "\1\0\2\1\1\11\2\1\2\0\1\11\1\1\4\0"+
+    "\1\11\4\0\1\11";
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[212];
@@ -934,72 +934,72 @@ public class Yylex {
             }
           case 55: break;
           case 13: 
-            { fixed = yycolumn + 1;
-    whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is if";
+            { token = yytext();
+    fixed = yycolumn + token.length() - 1;
+    whites = blankSpaces(token.length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";
             }
           case 56: break;
           case 14: 
             { fixed = yycolumn + 1;
-    whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'[]'";
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is if";
             }
           case 57: break;
           case 15: 
             { fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'{}'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'[]'";
             }
           case 58: break;
           case 16: 
             { fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'()'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'{}'";
             }
           case 59: break;
           case 17: 
-            { token = yytext();
-    fixed = yycolumn + 1;
+            { fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'()'";
             }
           case 60: break;
           case 18: 
             { token = yytext();
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is " + "'" + token + "'";
             }
           case 61: break;
           case 19: 
+            { token = yytext();
+    fixed = yycolumn + 1;
+    whites = blankSpaces(2);
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
+            }
+          case 62: break;
+          case 20: 
             { fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'||'";
             }
-          case 62: break;
-          case 20: 
+          case 63: break;
+          case 21: 
             { token = yytext();
      fixed = token.length() - 1;
      whites = blankSpaces(token.length());
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal " + "(value = " + token + ")";
             }
-          case 63: break;
-          case 21: 
+          case 64: break;
+          case 22: 
             { token = yytext();
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string variable";
             }
-          case 64: break;
-          case 22: 
-            { return yytext() + "not closed comment";
-            }
           case 65: break;
           case 23: 
-            { token = yytext();
-    fixed = yycolumn + token.length() - 1;
-    whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is float (value = " + token + ")";
+            { return yytext() + "not closed comment";
             }
           case 66: break;
           case 24: 

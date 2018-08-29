@@ -309,12 +309,12 @@ quote = [\"]
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = false)";
 }
 
-[0-9][0-9]*"\."[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
+[0-9][0-9]*"\."[0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
 {
     token = yytext();
     fixed = yycolumn + token.length() - 1;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is float (value = " + token + ")";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";
 }
 
 <YYINITIAL>"\."

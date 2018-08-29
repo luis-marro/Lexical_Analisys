@@ -26,6 +26,7 @@ string error1 = "deberia de fallar;
 private int metodoAlAzar(int ojala, string si, double salga){
 salga = 10.5E-9;
 ojala = 0x12aE;
+double = 12.;
 }
 
 esteMetodoNoExite("uno", "dos", 3);
