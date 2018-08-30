@@ -1004,11 +1004,12 @@ public class Yylex {
             { token = yytext();
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string variable";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string constant (Value = " + yytext() + " )" ;
             }
           case 65: break;
           case 23: 
-            { return yytext() + "not closed comment";
+            { errors.add(yytext() + "comment not closed");
+    return yytext() + "comment not closed";
             }
           case 66: break;
           case 24: 

@@ -64,7 +64,7 @@ quote = [\"]
 // not closed multiline comment
 <YYINITIAL>\/\*{WhiteSpace}?.*[^*/]
 {
-    errors.add(yytext() + "comment not closed")
+    errors.add(yytext() + "comment not closed");
     return yytext() + "comment not closed";
 }
 
@@ -362,7 +362,7 @@ quote = [\"]
     token = yytext();
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string variable";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string constant (Value = " + yytext() + " )" ;
 }
 
 
