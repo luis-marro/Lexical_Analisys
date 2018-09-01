@@ -43,6 +43,9 @@ quote = [\"]
         return builder.toString();
     }
 %}
+
+MultilineComment = ("/*"~"*/")
+
 %%
 
 {Ignored} | {WhiteSpace}
@@ -56,13 +59,15 @@ quote = [\"]
     // ignore single line comments
 }
 
-<YYINITIAL>\/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\*\/
+//<YYINITIAL>\/\*{WhiteSpace}?(.*\n.*)*{WhiteSpace}?\*\/
+{MultilineComment}
 {
     // ignore multiline comments
+    return "Comentario multi linea";
 }
 
 // not closed multiline comment
-<YYINITIAL>\/\*{WhiteSpace}?.*[^*/]
+("/*")([^"*/"])*
 {
     errors.add(yytext() + "comment not closed");
     return yytext() + "comment not closed";
@@ -335,7 +340,7 @@ quote = [\"]
 [A-Za-z][_A-Za-z0-9]* | [A-Za-z][_A-Za-z0-9]*{WhiteSpace}
 {
     token = longIdentifier(yytext());
-    fixed = yycolumn + token.length() - 2;
+    fixed = (token.length() == 1) ? (yycolumn) : yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
     if(yytext().length() <= 31)
         return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
