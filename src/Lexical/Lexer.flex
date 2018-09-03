@@ -63,7 +63,7 @@ MultilineComment = ("/*"~"*/")
 {MultilineComment}
 {
     // ignore multiline comments
-    return "Comentario multi linea";
+    //return "Comentario multi linea";
 }
 
 // not closed multiline comment
@@ -76,7 +76,7 @@ MultilineComment = ("/*"~"*/")
 [0-9][0-9]*
 {
     token = yytext();
-    fixed = token.length() - 1;
+    fixed = (token.length() == 1) ? fixed = yycolumn : token.length() - 1;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is intConstant  " + "(value = " + token + ")";
 }

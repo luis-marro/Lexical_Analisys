@@ -876,7 +876,7 @@ public class Yylex {
           case 48: break;
           case 6: 
             { token = yytext();
-    fixed = token.length() - 1;
+    fixed = (token.length() == 1) ? fixed = yycolumn : token.length() - 1;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is intConstant  " + "(value = " + token + ")";
             }
@@ -1006,7 +1006,7 @@ public class Yylex {
           case 69: break;
           case 27: 
             { // ignore multiline comments
-    return "Comentario multi linea";
+    //return "Comentario multi linea";
             }
           case 70: break;
           case 28: 

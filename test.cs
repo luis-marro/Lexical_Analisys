@@ -1,3 +1,10 @@
+/*Comentario multilinea papu
+para la prueba
+nada mas*/
+/*Comentario multilinea papu
+para la prueba
+nada mas
+*/
 class Prueba {
 int uno = 1;
 int dos = 2;
