@@ -207,11 +207,39 @@ MultilineComment = ("/*"~"*/")
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is New";
 }
 
-"NewArray"{WhiteSpace} "NewArray"
+"NewArray"{WhiteSpace} | "NewArray"
 {
     fixed = yycolumn + 7;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is NewArray";
+}
+
+"Print"{WhiteSpace} | "Print"
+{
+    fixed = yycolumn + 4;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Print";
+}
+
+"ReadInteger"{WhiteSpace} | "ReadInteger"
+{
+    fixed = yycolumn + 10;
+    whites = blankSpaces(yytext().lenght());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadInteger";
+}
+
+"ReadLine"{WhiteSpace} | "ReadLine"
+{
+    fixed = yycolumn + 7;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadLine";
+}
+
+"Malloc"{WhiteSpace} | "Malloc"
+{
+    fixed = yycolumn + 5;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Malloc";
 }
 
 <YYINITIAL>"\[\]"

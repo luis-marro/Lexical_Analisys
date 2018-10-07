@@ -1,29 +1,14 @@
 import Lexical.Analyzer_GUI;
+import Lexical.Syntax_GUI;
 
 public class Main {
     public static void main(String[] args) {
         {
-            //Scanner reader = new Scanner(System.in);
-            //System.out.println("Introduzca la ruta del archivo");
-            //String file = reader.nextLine();
 
             // start GUI
-            Analyzer_GUI gui = new Analyzer_GUI();
-            gui.setVisible(true);
+            Syntax_GUI syntaxGui = new Syntax_GUI();
+            syntaxGui.setVisible(true);
 
-            /*
-            Lexical lex;
-
-            try {
-                lex = new Lexical();
-                System.out.println("Se ha generado el analyzador lexico");
-
-                lex.transform(file);
-                System.out.println("Se ha analizado el archivo");
-
-            } catch (IOException e) {
-
-            }*/
         }
     }
     //TODO

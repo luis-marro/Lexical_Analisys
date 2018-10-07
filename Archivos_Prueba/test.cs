@@ -25,7 +25,7 @@ while((true && true) || (false&&true){
 string respuesta = "si funciona ve";
 }
 //este es un comentario
-/*Comentario multilinea papu
+/*Comentario multilinea papu*/
 para la prueba nada mas
 double d = 12.2;
 double exp = 12.2E+6;
@@ -37,4 +37,10 @@ double = 12.;
 }
 
 esteMetodoNoExite("uno", "dos", 3);
+
+// Prueba de las palabras agregadas
+Print(5);
+int bb = ReadLine(ReadInteger);
+ReadLine;
+Malloc;
 }
