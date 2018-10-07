@@ -69,8 +69,8 @@ MultilineComment = ("/*"~"*/")
 // not closed multiline comment
 ("/*")([^"*/"])*
 {
-    errors.add(yytext() + "comment not closed");
-    return yytext() + "comment not closed";
+    //errors.add(yytext() + "comment not closed");
+    //return yytext() + "comment not closed";
 }
 
 [0-9][0-9]*
@@ -100,6 +100,13 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is void";
+}
+
+"bool"{WhiteSpace} | "bool"
+{
+    fixed = yycolumn + 3;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is bool";
 }
 
 "string"{WhiteSpace} | "string"
@@ -322,7 +329,17 @@ MultilineComment = ("/*"~"*/")
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = false)";
 }
 
-[0-9][0-9]*"\."[0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
+<YYINITIAL>[0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
+{
+    // Give priority to doubles with exponential values
+    token = yytext();
+    fixed = yycolumn + token.length() - 1;
+    whites = blankSpaces(token.length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";
+}
+
+//[0-9][0-9]*"\."[0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
+[0-9][0-9]*"\."[0-9]*
 {
     token = yytext();
     fixed = yycolumn + token.length() - 1;

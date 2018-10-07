@@ -26,7 +26,7 @@ string respuesta = "si funciona ve";
 }
 //este es un comentario
 /*Comentario multilinea papu
-para la prueba nada mas*/
+para la prueba nada mas
 double d = 12.2;
 double exp = 12.2E+6;
 string error1 = "deberia de fallar;
