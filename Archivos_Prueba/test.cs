@@ -36,6 +36,13 @@ ojala = 0x12aE;
 double = 12.;
 }
 
+if(!5>6)
+{
+a = !true;
+}
+
+int[] bb = new int[64];
+
 esteMetodoNoExite("uno", "dos", 3);
 
 // Prueba de las palabras agregadas

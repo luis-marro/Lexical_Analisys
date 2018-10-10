@@ -11,10 +11,4 @@ public class Main {
 
         }
     }
-    //TODO
-    /*
-       add error handling for multiline comments with errors
-       Fix error with strings as method parameters
-       add GUI
-    */
 }

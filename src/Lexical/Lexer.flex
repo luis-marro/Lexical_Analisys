@@ -10,8 +10,8 @@ import java.util.List;
 %line
 %column
 %type String
+%cup
 
-symbol = [%<>=!;.\[\]()\{\}]
 Ignored = [\t\r\f\n]
 LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
@@ -74,312 +74,443 @@ MultilineComment = ("/*"~"*/")
 }
 
 [0-9][0-9]*
-{
+{/*
     token = yytext();
     fixed = (token.length() == 1) ? fixed = yycolumn : token.length() - 1;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is intConstant  " + "(value = " + token + ")";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is intConstant  " + "(value = " + token + ")"; */
+    return new Symbol(sym.INTCONST, new Integer(Integer.parseint(yytext()))) ;
 }
 
 "int" | "int"{WhiteSpace}
 {
-    fixed = yycolumn + 2;
+    /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is int";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is int";*/
+    return new Symbol(sym.INT);
 }
 
 "double"{WhiteSpace} | "double"
 {
-    fixed = yycolumn + 5;
+    /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double";*/
+    return new Symbol(sym.DOUBLE);
 }
 
 "void"{WhiteSpace} | "void"
 {
-    fixed = yycolumn + 3;
+    /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is void";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is void";*/
+    return new Symbol(sym.VOID);
 }
 
 "bool"{WhiteSpace} | "bool"
 {
-    fixed = yycolumn + 3;
+    /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is bool";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is bool";*/
+    return new Symbol(sym.BOOL);
 }
 
 "string"{WhiteSpace} | "string"
 {
-    fixed = yycolumn + 5;
+    /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string";*/
+    return new Symbol(sym.STRING);
 }
 
 "class"{WhiteSpace} | "class"
 {
-    fixed = yycolumn + 4;
+    /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is class";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is class";*/
+    return new Symbol(sym.CLASS);
 }
 
 "interface"{WhiteSpace} | "interface"
 {
-    fixed = yycolumn + 8;
+    /*fixed = yycolumn + 8;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is interface";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is interface";*/
+    return new Symbol(sym.INTERFACE);
 }
 
 "null"{WhiteSpace} | "null"
 {
-    fixed = yycolumn + 3;
+    /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is null";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is null";*/
+    return new Symbol(sym.NULL);
 }
 
 "this"{WhiteSpace} | "this"
 {
-    fixed = yycolumn + 3;
+    /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is this";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is this";*/
+    return new Symbol(sym.THIS);
 }
 
 "extends"{WhiteSpace} | "extends"
 {
-    fixed = yycolumn + 6;
+    /*fixed = yycolumn + 6;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is extends";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is extends";*/
+    return new Symbol(sym.EXTENDS);
 }
 
 "implements"{WhiteSpace} | "implements"
 {
-    fixed = yycolumn + 9;
+    /*fixed = yycolumn + 9;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is implements";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is implements";*/
+    return new Symbol(sym.IMPLEMENTS);
 }
 
 "for"{WhiteSpace} | "for"
 {
-    fixed = yycolumn + 2;
+    /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is for";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is for";*/
+    return new Symbol(sym.FOR);
 }
 
 "while"{WhiteSpace} | "while"
 {
-    fixed = yycolumn + 4;
+    /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is while";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is while";*/
+    return new Symbol(sym.WHILE);
 }
 
 "if"{WhiteSpace} | "if"
 {
-    fixed = yycolumn + 1;
+    /*fixed = yycolumn + 1;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is if";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is if";*/
+    return new Symbol(sym.IF);
 }
 
 "else"{WhiteSpace} "else"
 {
-    fixed = yycolumn + 3;
+    /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is else";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is else";*/
+    return new Symbol(sym.ELSE);
 }
 
 "return"{WhiteSpace} "return"
 {
-    fixed = yycolumn + 5;
+    /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is return";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is return";*/
+    return new Symbol(sym.RETURN);
 }
 
 "break"{WhiteSpace} | "break"
 {
-    fixed = yycolumn + 4;
+    /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is break";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is break";*/
+    return new Symbol(sym.BREAK);
 }
 
 "New"{WhiteSpace} | "New"
 {
-    fixed = yycolumn + 2;
+    /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is New";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is New";*/
+    return new Symbol(sym.NEW);
 }
 
 "NewArray"{WhiteSpace} | "NewArray"
 {
-    fixed = yycolumn + 7;
+    /*fixed = yycolumn + 7;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is NewArray";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is NewArray";*/
+    return new Symbol(sym.NEWARRAY);
 }
 
 "Print"{WhiteSpace} | "Print"
 {
-    fixed = yycolumn + 4;
+    /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Print";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Print";*/
+    return new Symbol(sym.PRINT);
 }
 
 "ReadInteger"{WhiteSpace} | "ReadInteger"
 {
-    fixed = yycolumn + 10;
-    whites = blankSpaces(yytext().lenght());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadInteger";
+    /*fixed = yycolumn + 10;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadInteger";*/
+    return new Symbol(sym.READINTEGER);
 }
 
 "ReadLine"{WhiteSpace} | "ReadLine"
 {
-    fixed = yycolumn + 7;
+    /*fixed = yycolumn + 7;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadLine";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadLine";*/
+    return new Symbol(sym.READLINE);
 }
 
 "Malloc"{WhiteSpace} | "Malloc"
 {
-    fixed = yycolumn + 5;
+    /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Malloc";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Malloc";*/
+    return new Symbol(sym.MALLOC);
 }
 
 <YYINITIAL>"\[\]"
 {
-    fixed = yycolumn + 1;
+    /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'[]'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'[]'";*/
+    return new Symbol(sym.TWOBRACK);
 }
 
 <YYINITIAL>"\{\}"
 {
-    fixed = yycolumn + 1;
+    /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'{}'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'{}'";*/
+    return new Symbol(sym.TWOCURLY);
 }
 
 <YYINITIAL>"\(\)"
 {
-    fixed = yycolumn + 1;
+    /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'()'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'()'";*/
+    return new Symbol(sym.TWOPAR);
 }
 
-{symbol}
+"%"
 {
-    token = yytext();
+    /*token = yytext();
     whites = blankSpaces(1);
-    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.PERCENT);
+}
+
+"<"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.LESST);
+}
+
+">"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.GREATT);
+}
+
+"="
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.EQUALS);
+}
+
+"!"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.EXCLA);
+}
+
+";"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.PAC);
+}
+
+"["
+{
+     /*token = yytext();
+     whites = blankSpaces(1);
+     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+     return new Symbol(sym.LEFTBRACKET);
+}
+
+"]"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.RIGHTBRACKET);
+}
+
+"("
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.LEFTPAR);
+}
+
+")"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.RIGHTPAR);
+}
+
+"{"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.LEFTCURLY);
+}
+
+"}"
+{
+    /*token = yytext();
+    whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.RIGHTCURLY);
 }
 
 "\<="
 {
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is " + "'" + token + "'";*/
+    return new Symbol(sym.LESSEQ);
 }
 
 "\>="
 {
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
+    return new Symbol(sym.GTREQ);
 }
 
 "!="
 {
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
+    return new Symbol(sym.DIFFERENT);
 }
 
 "\/"
 {
-    token = yytext();
+    /*token = yytext();
     whites = blankSpaces(1);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'" + token + "'";*/
+    return new Symbol(sym.DIV);
 }
 
 "&&"
 {
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
+    return new Symbol(sym.AND);
 }
 
 \|\|
 {
-    fixed = yycolumn + 1;
+    /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'||'";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'||'";*/
+    return new Symbol(sym.OR);
 }
 
 "\+"
 {
-    whites = blankSpaces(1);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'+'";
+    /*whites = blankSpaces(1);
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'+'";*/
+    return new Symbol(sym.ADD);
 }
 
 "\-"
  {
-     whites = blankSpaces(1);
-     return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'-'";
+     /*whites = blankSpaces(1);
+     return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'-'";*/
+     return new Symbol(sym.MINUS);
  }
 
  "\*"
  {
-     whites = blankSpaces(1);
-     return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'*'";
+     /*whites = blankSpaces(1);
+     return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'*'";*/
+     return new Symbol(sym.MULT);
  }
 
  // Hexadecimal 0x12aE
  <YYINITIAL>0[xX][0-9a-fA-F]*
  {
-     token = yytext();
+     /*token = yytext();
      fixed = token.length() - 1;
      whites = blankSpaces(token.length());
-     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal " + "(value = " + token + ")";
+     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal " + "(value = " + token + ")";*/
+     return new Symbol(sym.HEX, new Integer(Integer.parseInt("0x45E213".replace("0x",""), 16)));
  }
 
 "true"
 {
-    fixed = yycolumn + 3;
+    /*fixed = yycolumn + 3;
     whites = blankSpaces(4);
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = true)";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = true)";*/
+    return new Symbol(sym.TRUE);
 }
 
 "false"
 {
-     fixed = yycolumn + 4;
+     /*fixed = yycolumn + 4;
      whites = blankSpaces(5);
-     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = false)";
+     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = false)";*/
+     return new Symbol(sym.FALSE);
 }
 
 <YYINITIAL>[0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
 {
     // Give priority to doubles with exponential values
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + token.length() - 1;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";*/
+    return new Symbol(sym.DOUBLECONST, new Double(Double.parseDouble(yytext())));
 }
 
 //[0-9][0-9]*"\."[0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
 [0-9][0-9]*"\."[0-9]*
 {
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + token.length() - 1;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";*/
+    return new Symbol(sym.DOUBLECONST, new Double(Double.parseDouble(yytext())));
 }
 
 <YYINITIAL>"\."
 {
-    token = yytext();
+    /*token = yytext();
     whites = blankSpaces(1);
-    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ".";
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ".";*/
+    return new Symbol(sym.DOT);
 }
 
 [A-Za-z][_A-Za-z0-9]* | [A-Za-z][_A-Za-z0-9]*{WhiteSpace}
@@ -387,40 +518,46 @@ MultilineComment = ("/*"~"*/")
     token = longIdentifier(yytext());
     fixed = (token.length() == 1) ? (yycolumn) : yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
-    if(yytext().length() <= 31)
-        return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
-    else
-        return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier (truncated)";
+    //if(yytext().length() <= 31)
+    return new Symbol(sym.IDENTIFIER, fixed);
+        //return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
+    //else
+        //return new Symbol(sym.IDENTIFIER, fixed);
+        //return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier (truncated)";
 }
 
 [0-9_][A-Za-z0-9_]*
 {
-    errors.add("*** Error en linea " + yyline + " identificador inválido: " + yytext());
-    return "*** Error en linea " + yyline + " identificador inválido: " + yytext();
+    /*errors.add("*** Error en linea " + yyline + " identificador inválido: " + yytext());
+    return "*** Error en linea " + yyline + " identificador inválido: " + yytext();*/
+    return new Symbol(sym.ERROR);
 }
 
 <YYINITIAL>{WhiteSpace}*"\,"{WhiteSpace}*
 {
-    token = yytext();
+    /*token = yytext();
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ",";
+    return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ",";*/
+    return new Symbol(sym.COMMA);
 }
 
 // string rules
 {quote}.*[^\"]{quote}
 {
-    token = yytext();
+    /*token = yytext();
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
-    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string constant (Value = " + yytext() + " )" ;
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string constant (Value = " + yytext() + " )" ;*/
+    return new Symbol(sym.STRINGCONST);
 }
 
 
 
 .
 {
-    errors.add("*** Error en linea " + yyline + " caracter no reconocido " + yytext());
-    return "*** Error en linea " + yyline + " caracter no reconocido " + yytext();
+    /*errors.add("*** Error en linea " + yyline + " caracter no reconocido " + yytext());
+    return "*** Error en linea " + yyline + " caracter no reconocido " + yytext();*/
+    return new Symbol(sym.ERROR);
 }
 
 
