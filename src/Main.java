@@ -22,25 +22,31 @@ public class Main {
             Scanner inputReader = new Scanner(System.in);
             String path = inputReader.nextLine();
             FileManager manager = new FileManager();
-            manager.trimFile(path);
-            String options[] = new String[7];
-            options[0] = "-destdir";
-            options[1] = "D:\\Mis Documentos\\Universidad\\Progra\\Box Sync\\Compiladores\\Proj_Fase#1\\Lexical_Analisys\\src\\Lexical";
-            options[2] = "-symbols";
-            options[3] = "minc#Parser";
-            options[4] = "-parser";
-            options[5] = "Parser";
-            options[6] = "D:\\Mis Documentos\\Universidad\\Progra\\Box Sync\\Compiladores\\Proj_Fase#1\\Lexical_Analisys\\src\\Lexical\\Parser.cup";
-            try {
-                //Lexical lexical  = new Lexical();
-                //Yylex scanner = new Yylex(new FileReader(path));
-                java_cup.Main.main(options);
-                System.out.println("Se genero el codigo exitosamente");
+            if (manager.trimFile(path)) {
+                String options[] = new String[7];
+                options[0] = "-destdir";
+                options[1] = "D:\\Mis Documentos\\Universidad\\Progra\\Box Sync\\Compiladores\\Proj_Fase#1\\Lexical_Analisys\\src\\Lexical";
+                options[2] = "-symbols";
+                options[3] = "minc#Parser";
+                options[4] = "-parser";
+                options[5] = "Parser";
+                options[6] = "D:\\Mis Documentos\\Universidad\\Progra\\Box Sync\\Compiladores\\Proj_Fase#1\\Lexical_Analisys\\src\\Lexical\\Parser.cup";
+                try {
+                    java_cup.Main.main(options);
+                    System.out.println("Se genero el codigo exitosamente");
+                    // succes, generate the lexee
+                    //Lexical lexical  = new Lexical();
+                    //Yylex scanner = new Yylex(new FileReader(path));
+                    // Parse the file
+                    // Parser par = new Parser(scanner);
 
-            } catch (Exception e){
+                } catch (Exception e) {
 
+                }
+
+            }else {
+                System.out.println("El archivo seleccionado no existe");
             }
-
         }
     }
 }

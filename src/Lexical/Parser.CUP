@@ -7,7 +7,7 @@ import jave.io.InputStream;
 parser code {:
 
     public void syntax_error(Symbol s){
-        report_error("Error de sintaxis en la linea " + s.left, null);
+        System.out.println("Error de sintaxis en la linea " + (s.right+1) + " Token: " + s.value, null);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws
@@ -51,15 +51,15 @@ non terminal stmtAug, stmt, exprOpt, ifStmt, whileStmt, forStmt, returnStmt, bre
 non terminal printStmt, exprPlus, expr, lValue, call, libCall, actuals, constant, ifStmtD;
 
 /* Precedences */
-precedence nonassoc EQUALS, LESST, GREATT, LESSEQ, GTREQ;
+precedence left EQUALS, LESST, GREATT, LESSEQ, GTREQ;
 precedence left OR;
 precedence left AND;
-precedence left DIFFERENT, COMPEQUALS;
+precedence nonassoc DIFFERENT, COMPEQUALS;
 precedence left ADD, MINUS;
 precedence left MULT, DIV, PERCENT;
-precedence left EXCLA, MINUS;
-precedence left LEFTBRACKET, DOT;
-
+precedence nonassoc EXCLA;
+precedence nonassoc LEFTBRACKET, DOT;
+precedence nonassoc ELSE;
 /* Grammar */
 
 start with program ;

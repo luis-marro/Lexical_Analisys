@@ -1,5 +1,7 @@
 package Lexical;
 import org.apache.commons.io.FilenameUtils;
+
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.*;
 import java.util.List;
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ public class FileManager {
 
     }
 
-    public void trimFile(String path){
+    public boolean trimFile(String path){
         File file = new File(path);
 
         try {
@@ -37,10 +39,14 @@ public class FileManager {
                 writer.write(allLines.get(i) + "\n");
             }
             writer.close();
+            return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            System.out.println("El archivo no existe");
+            return  false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
