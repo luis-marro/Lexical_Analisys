@@ -234,6 +234,22 @@ MultilineComment = ("/*"~"*/")
     return new Symbol(sym.NEWARRAY);
 }
 
+"GetByte"{WhiteSpace} | "GetByte"
+{
+    /*fixed = yycolumn + 2;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is GetByte";*/
+    return new Symbol(sym.GETBYTE);
+}
+
+"SetByte"{WhiteSpace} | "SetByte"
+{
+    /*fixed = yycolumn + 2;
+    whites = blankSpaces(yytext().length());
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is SetByte";*/
+    return new Symbol(sym.SETBYTE);
+}
+
 "Print"{WhiteSpace} | "Print"
 {
     /*fixed = yycolumn + 4;
@@ -312,6 +328,15 @@ MultilineComment = ("/*"~"*/")
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
     return new Symbol(sym.GREATT);
+}
+
+"=="
+{
+    /*token = yytext();
+    fixed = yycolumn + 1;
+    whites = blankSpaces(2);
+    return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
+    return new Symbol(sym.COMPEQUALS);
 }
 
 "="
@@ -518,11 +543,11 @@ MultilineComment = ("/*"~"*/")
     token = longIdentifier(yytext());
     fixed = (token.length() == 1) ? (yycolumn) : yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
-    //if(yytext().length() <= 31)
-    return new Symbol(sym.IDENTIFIER, fixed);
+    if(yytext().length() <= 31)
+        return new Symbol(sym.IDENTIFIER, fixed);
         //return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
-    //else
-        //return new Symbol(sym.IDENTIFIER, fixed);
+    else
+        return new Symbol(sym.IDENTIFIER, fixed);
         //return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier (truncated)";
 }
 

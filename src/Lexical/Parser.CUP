@@ -15,7 +15,9 @@ parser code {:
             report_fatal_error("", null);
     }
 
-    public node root = null;
+    public void syntax_error(Symbol cur_token){
+    	System.err.println("Syntax error at "+cur_token);
+    }
 
     public static parser getParser(String pPath) throws exception {
         InputStream is = null;
@@ -23,13 +25,7 @@ parser code {:
         return new parser(new Yylez(is));
     }
 
-    public Node getTree() throws exception {
-        if(root == null) {
-            this.parse();
-        }
-        return root;
-    }
-    
+
 :};
 
 /* Terminal tokens returned by the scanner */
@@ -39,16 +35,190 @@ terminal IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY;
 terminal PRINT, READINTEGER, READLINE, MALLOC, TWOBRACK, TWOCURLY, TWOPAR, PERCENT;
 terminal LESST, GREATT, EQUALS, EXCLA, PAC, LEFTBRACKET, RIGHTBRACKET, LEFTPAR, RIGHTPAR;
 terminal LEFTCURLY, RIGHTCURLY, LESSEQ, GTREQ, DIFFERENT, DIV, AND, OR, ADD, MINUS;
-terminal MULT, TRUE, FALSE, DOT, COMMA, ERROR;
+terminal MULT, TRUE, FALSE, DOT, COMMA, ERROR, COMPEQUALS, GETBYTE, SETBYTE;
 
 /* Terminals that have values */
-terminal Integer INTCONST;
-terminal Double DOUBLECONST;
-terminal String IDENTIFIER;
-terminal String STRINGCONST;
+terminal INTCONST;
+terminal DOUBLECONST;
+terminal IDENTIFIER;
+terminal STRINGCONST;
 
 /* Non Terminals*/
-non terminal Node
+non terminal program, decl, variableDecl, variable, type, functionDecl, decl_plus;
+non terminal formals, formalsExt, classDecl, extendedIdent, impl, idenPlus, augField;
+non terminal field, interfaceDecl, augPrototype, prototype, stmtBlock, variableDecAug;
+non terminal stmtAug, stmt, exprOpt, ifStmt, whileStmt, forStmt, returnStmt, breakStmt;
+non terminal printStmt, exprPlus, expr, lValue, call, libCall, actuals, constant, ifStmtD;
+
+/* Precedences */
+precedence nonassoc EQUALS, LESST, GREATT, LESSEQ, GTREQ;
+precedence left OR;
+precedence left AND;
+precedence left DIFFERENT, COMPEQUALS;
+precedence left ADD, MINUS;
+precedence left MULT, DIV, PERCENT;
+precedence left EXCLA, MINUS;
+precedence left LEFTBRACKET, DOT;
+
+/* Grammar */
+
+start with program ;
+
+program ::= decl_plus ;
+
+decl_plus ::= decl decl_plus
+                | decl;
+
+decl ::= variableDecl
+         |  functionDecl
+         |  classDecl
+         |  interfaceDecl;
+
+variableDecl ::= variable PAC ;
+
+variable ::= type IDENTIFIER ;
+
+type ::= INT
+            | DOUBLE
+            | BOOL
+            | STRING
+            | IDENTIFIER TWOBRACK ;
+
+functionDecl ::= type IDENTIFIER LEFTPAR formals RIGHTPAR stmtBlock
+                | VOID IDENTIFIER LEFTPAR formals RIGHTPAR stmtBlock ;
+
+formals ::= formalsExt ;
+
+formalsExt ::= variable
+                | variable COMMA formalsExt ;
+
+classDecl ::= CLASS IDENTIFIER extendedIdent impl LEFTBRACKET augField RIGHTBRACKET ;
+
+extendedIdent ::= EXTENDS IDENTIFIER
+                |
+                ;
+
+impl ::= IMPLEMENTS idenPlus
+            |
+            ;
+
+idenPlus ::= IDENTIFIER
+            | IDENTIFIER COMMA idenPlus ;
+
+augField ::= field
+            | field augField
+            |
+            ;
+
+field ::= variableDecl
+            | functionDecl ;
+
+interfaceDecl ::= INTERFACE IDENTIFIER LEFTBRACKET augPrototype RIGHTBRACKET ;
+
+augPrototype ::= prototype augPrototype
+            |
+            ;
+
+stmtBlock ::= LEFTBRACKET variableDecAug stmtAug RIGHTBRACKET;
+
+variableDecAug ::= variableDecl variableDecAug
+                |
+                ;
+
+stmtAug ::= stmt stmtAug
+            |
+            ;
+
+stmt ::= exprPlus PAC
+        | ifStmt
+        | whileStmt
+        | forStmt
+        | breakStmt
+        | returnStmt
+        | printStmt
+        | stmtBlock ;
+
+exprPlus ::= expr
+            |
+            ;
+
+ifStmt ::= IF LEFTPAR expr RIGHTPAR stmt ifStmtD;
+
+ifStmtD ::= ELSE stmt
+            |
+            ;
+
+whileStmt ::= WHILE LEFTPAR expr RIGHTPAR stmt ;
+
+
+forStmt::= FOR LEFTPAR exprPlus PAC expr PAC exprPlus RIGHTPAR stmt ;
+
+returnStmt ::= RETURN exprPlus ;
+
+breakStmt ::= BREAK PAC ;
+
+printStmt ::= PRINT LEFTPAR exprOpt RIGHTPAR PAC ;
+
+exprOpt ::= expr COMMA exprOpt
+            | expr ;
+
+expr ::= lValue EQUALS expr
+            | constant
+            | lValue
+            | THIS
+            | call
+            | LEFTPAR expr RIGHTPAR
+            | expr ADD expr %prec ADD
+            | expr MINUS expr %prec MINUS
+            | expr MULT expr %prec MULT
+            | expr DIV expr %prec DIV
+            | expr PERCENT expr %prec PERCENT
+            | MINUS expr %prec MINUS
+            | expr LESST expr
+            | expr LESSEQ expr
+            | expr GREATT expr
+            | expr GTREQ expr
+            | expr COMPEQUALS expr %prec COMPEQUALS
+            | expr DIFFERENT expr %prec DIFFERENT
+            | expr AND expr %prec AND
+            | expr OR expr %prec OR
+            | EXCLA expr %prec EXCLA
+            | NEW LEFTPAR IDENTIFIER RIGHTPAR
+            | NEWARRAY LEFTPAR expr COMMA type RIGHTPAR
+            | READINTEGER TWOPAR
+            | READLINE TWOPAR
+            | MALLOC LEFTPAR expr RIGHTPAR  ;
+
+lValue ::= IDENTIFIER
+            | expr DOT IDENTIFIER
+            | expr LEFTBRACKET expr RIGHTBRACKET ;
+
+call ::= IDENTIFIER LEFTPAR actuals RIGHTPAR
+            | expr DOT IDENTIFIER LEFTPAR actuals RIGHTPAR
+            | expr DOT libCall LEFTPAR actuals RIGHTPAR;
+
+libCall ::= GETBYTE LEFTPAR expr RIGHTPAR
+            | SETBYTE LEFTPAR expr COMMA expr RIGHTPAR ;
+
+actuals ::= exprOpt
+            |
+            ;
+
+constant ::= INTCONST
+            | DOUBLECONST
+            | STRINGCONST
+            | TRUE
+            | FALSE
+            | NULL;
+
+
+
+
+
+
+
+
+
 
 
 

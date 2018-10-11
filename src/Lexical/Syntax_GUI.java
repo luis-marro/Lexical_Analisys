@@ -58,7 +58,6 @@ public class Syntax_GUI extends javax.swing.JFrame {
                         lblPath.setText("Ingresar ruta del archivo...");
                         // TODO:
                         // implement logic to sintactically analyze a file
-                        // Display the errors in the display if any.
                         // TODO:
                         // Display the errors found in the analysis.
                         path = "";

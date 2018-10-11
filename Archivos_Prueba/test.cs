@@ -50,4 +50,12 @@ Print(5);
 int bb = ReadLine(ReadInteger);
 ReadLine;
 Malloc;
+
+double d = -4.5;
+int l = -85;
+
+if(a == b)
+if(a==b)
+GetByte(a);
+SetByte(a + b);
 }

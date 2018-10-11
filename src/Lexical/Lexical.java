@@ -14,7 +14,7 @@ public class Lexical {
 
     // class constructor
     public Lexical() throws IOException{
-        jflex.Main.generate(new File("src/Lexical/lexer.flex"));
+        jflex.Main.generate(new File("src/Lexical/Lexer.flex"));
     }
 
     public List<String> getErrors(){
