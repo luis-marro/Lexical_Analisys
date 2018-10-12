@@ -51,9 +51,9 @@ non terminal stmtAug, stmt, exprOpt, ifStmt, whileStmt, forStmt, returnStmt, bre
 non terminal printStmt, exprPlus, expr, lValue, call, libCall, actuals, constant, ifStmtD;
 
 /* Precedences */
-precedence left EQUALS, LESST, GREATT, LESSEQ, GTREQ;
 precedence left OR;
 precedence left AND;
+precedence left EQUALS, LESST, GREATT, LESSEQ, GTREQ;
 precedence nonassoc DIFFERENT, COMPEQUALS;
 precedence left ADD, MINUS;
 precedence left MULT, DIV, PERCENT;
@@ -119,15 +119,14 @@ augPrototype ::= prototype augPrototype
             |
             ;
 
-stmtBlock ::= LEFTBRACKET variableDecAug stmtAug RIGHTBRACKET;
+stmtBlock ::= LEFTBRACKET variableDecAug stmtAug RIGHTBRACKET
+            | LEFTBRACKET RIGHTBRACKET
+            | LEFTBRACKET stmtAug RIGHTBRACKET
+            | LEFTBRACKET variableDecAug RIGHTBRACKET;
 
-variableDecAug ::= variableDecl variableDecAug
-                |
-                ;
+variableDecAug ::= variableDecl variableDecAug;
 
-stmtAug ::= stmt stmtAug
-            |
-            ;
+stmtAug ::= stmt stmtAug;
 
 stmt ::= exprPlus PAC
         | ifStmt
@@ -137,10 +136,12 @@ stmt ::= exprPlus PAC
         | returnStmt
         | printStmt
         | stmtBlock ;
+        
 
 exprPlus ::= expr
             |
             ;
+
 
 ifStmt ::= IF LEFTPAR expr RIGHTPAR stmt ifStmtD;
 
