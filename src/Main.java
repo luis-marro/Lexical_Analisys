@@ -4,7 +4,10 @@ import Lexical.Syntax_GUI;
 import java_cup.runtime.*;
 import Lexical.*;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.util.List;
 import java.util.Scanner;
 
 import java.io.IOException;
@@ -12,41 +15,54 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         {
-
-            // start GUI
-            //Syntax_GUI syntaxGui = new Syntax_GUI();
-            //syntaxGui.setVisible(true);
-
-            // console test cup
-            System.out.println("Ingrese la ruta del archivo a convertir ");
-            Scanner inputReader = new Scanner(System.in);
-            String path = inputReader.nextLine();
+            List<String> lexErrors = null;
+            List<String> syntaxErrors = null;
             FileManager manager = new FileManager();
-            if (manager.trimFile(path)) {
-                String options[] = new String[7];
-                options[0] = "-destdir";
-                options[1] = "D:\\Mis Documentos\\Universidad\\Progra\\Box Sync\\Compiladores\\Proj_Fase#1\\Lexical_Analisys\\src\\Lexical";
-                options[2] = "-symbols";
-                options[3] = "minc#Parser";
-                options[4] = "-parser";
-                options[5] = "Parser";
-                options[6] = "D:\\Mis Documentos\\Universidad\\Progra\\Box Sync\\Compiladores\\Proj_Fase#1\\Lexical_Analisys\\src\\Lexical\\Parser.cup";
-                try {
-                    java_cup.Main.main(options);
-                    System.out.println("Se genero el codigo exitosamente");
-                    // succes, generate the lexee
-                    //Lexical lexical  = new Lexical();
-                    //Yylex scanner = new Yylex(new FileReader(path));
-                    // Parse the file
-                    // Parser par = new Parser(scanner);
+            String cupPath = "src/Lexical/Parser.CUP";
+            String options[] = new String[3];
+            options[0] = "-parser";
+            options[1] = "syntaxAnalizer";
+            options[2] = cupPath;
+            try {
+                System.out.println("Generando el analizador lexico");
+                jflex.Main.generate(new File("src/Lexical/Lexer.flex"));
+                System.out.println("Se genero el analizador lexico");
+                System.out.println("Empezando la compilacion del archivo Cup");
+                //java_cup.Main.main(options);
+                System.out.println("Se genero el codigo exitosamente");
+                System.out.println("Ingrese la ruta del archivo a convertir ");
+                Scanner inputReader = new Scanner(System.in);
+                String path = inputReader.nextLine();
+                // Begin the analysis of the file
+                manager.trimFile(path);
+                BufferedReader reader = new BufferedReader(new FileReader(path));
+                Yylex lex = new Yylex(reader);
+                /*
+                syntaxAnalizer parser = new syntaxAnalizer(lex);
+                // parser the file
+                parser.parse();
 
-                } catch (Exception e) {
+                lexErrors = lex.getError();
+                syntaxErrors = parser.syntaxErrors;
 
+                // Finally, print the values
+                if(lexErrors.size() > 0) {
+                    for (int i = 0; i < lexErrors.size(); i++) {
+                        System.out.println(lexErrors.get(i));
+                    }
                 }
 
-            }else {
-                System.out.println("El archivo seleccionado no existe");
+                if(syntaxErrors.size() > 0){
+                    for(int i = 0; i < syntaxErrors.size(); i++){
+                        System.out.println(syntaxErrors.get(i));
+                    }
+                }*/
+
+            System.out.println("Termino con exito");
+            } catch (Exception e) {
+                System.out.println("Error al procesar el archivo");
             }
+
         }
     }
 }

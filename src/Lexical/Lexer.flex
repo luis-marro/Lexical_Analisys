@@ -3,8 +3,10 @@ package Lexical;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
+import java_cup.runtime.Symbol;
 %%
 %public
+%cup
 %class Yylex
 %unicode
 %line
@@ -42,6 +44,15 @@ quote = [\"]
         }
         return builder.toString();
     }
+
+    private Symbol symbol(int type){
+        return new Symbol(type, yyline, yycolumn, yytext());
+    }
+
+    private Symbol symbol(int type, Object value){
+        return new Symbol(type, yyline, yycolumn, value);
+    }
+
 %}
 
 MultilineComment = ("/*"~"*/")
@@ -79,7 +90,7 @@ MultilineComment = ("/*"~"*/")
     fixed = (token.length() == 1) ? fixed = yycolumn : token.length() - 1;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is intConstant  " + "(value = " + token + ")"; */
-    return new Symbol(sym.INTCONST, new Integer(Integer.parseint(yytext()))) ;
+    return symbol(sym.INTCONST, new Integer(Integer.parseInt(yytext()))) ;
 }
 
 "int" | "int"{WhiteSpace}
@@ -87,7 +98,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is int";*/
-    return new Symbol(sym.INT);
+    return symbol(sym.INT);
 }
 
 "double"{WhiteSpace} | "double"
@@ -95,7 +106,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double";*/
-    return new Symbol(sym.DOUBLE);
+    return symbol(sym.DOUBLE);
 }
 
 "void"{WhiteSpace} | "void"
@@ -103,7 +114,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is void";*/
-    return new Symbol(sym.VOID);
+    return symbol(sym.VOID);
 }
 
 "bool"{WhiteSpace} | "bool"
@@ -111,7 +122,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is bool";*/
-    return new Symbol(sym.BOOL);
+    return symbol(sym.BOOL);
 }
 
 "string"{WhiteSpace} | "string"
@@ -119,7 +130,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string";*/
-    return new Symbol(sym.STRING);
+    return symbol(sym.STRING);
 }
 
 "class"{WhiteSpace} | "class"
@@ -127,7 +138,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is class";*/
-    return new Symbol(sym.CLASS);
+    return symbol(sym.CLASS);
 }
 
 "interface"{WhiteSpace} | "interface"
@@ -135,7 +146,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 8;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is interface";*/
-    return new Symbol(sym.INTERFACE);
+    return symbol(sym.INTERFACE);
 }
 
 "null"{WhiteSpace} | "null"
@@ -143,7 +154,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is null";*/
-    return new Symbol(sym.NULL);
+    return symbol(sym.NULL);
 }
 
 "this"{WhiteSpace} | "this"
@@ -151,7 +162,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is this";*/
-    return new Symbol(sym.THIS);
+    return symbol(sym.THIS);
 }
 
 "extends"{WhiteSpace} | "extends"
@@ -159,7 +170,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 6;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is extends";*/
-    return new Symbol(sym.EXTENDS);
+    return symbol(sym.EXTENDS);
 }
 
 "implements"{WhiteSpace} | "implements"
@@ -167,7 +178,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 9;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is implements";*/
-    return new Symbol(sym.IMPLEMENTS);
+    return symbol(sym.IMPLEMENTS);
 }
 
 "for"{WhiteSpace} | "for"
@@ -175,7 +186,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is for";*/
-    return new Symbol(sym.FOR);
+    return symbol(sym.FOR);
 }
 
 "while"{WhiteSpace} | "while"
@@ -183,7 +194,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is while";*/
-    return new Symbol(sym.WHILE);
+    return symbol(sym.WHILE);
 }
 
 "if"{WhiteSpace} | "if"
@@ -191,7 +202,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 1;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is if";*/
-    return new Symbol(sym.IF);
+    return symbol(sym.IF);
 }
 
 "else"{WhiteSpace} "else"
@@ -199,7 +210,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 3;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is else";*/
-    return new Symbol(sym.ELSE);
+    return symbol(sym.ELSE);
 }
 
 "return"{WhiteSpace} "return"
@@ -207,7 +218,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is return";*/
-    return new Symbol(sym.RETURN);
+    return symbol(sym.RETURN);
 }
 
 "break"{WhiteSpace} | "break"
@@ -215,7 +226,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is break";*/
-    return new Symbol(sym.BREAK);
+    return symbol(sym.BREAK);
 }
 
 "New"{WhiteSpace} | "New"
@@ -223,7 +234,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is New";*/
-    return new Symbol(sym.NEW);
+    return symbol(sym.NEW);
 }
 
 "NewArray"{WhiteSpace} | "NewArray"
@@ -231,7 +242,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 7;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is NewArray";*/
-    return new Symbol(sym.NEWARRAY);
+    return symbol(sym.NEWARRAY);
 }
 
 "GetByte"{WhiteSpace} | "GetByte"
@@ -239,7 +250,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is GetByte";*/
-    return new Symbol(sym.GETBYTE);
+    return symbol(sym.GETBYTE);
 }
 
 "SetByte"{WhiteSpace} | "SetByte"
@@ -247,7 +258,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 2;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is SetByte";*/
-    return new Symbol(sym.SETBYTE);
+    return symbol(sym.SETBYTE);
 }
 
 "Print"{WhiteSpace} | "Print"
@@ -255,7 +266,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 4;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Print";*/
-    return new Symbol(sym.PRINT);
+    return symbol(sym.PRINT);
 }
 
 "ReadInteger"{WhiteSpace} | "ReadInteger"
@@ -263,7 +274,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 10;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadInteger";*/
-    return new Symbol(sym.READINTEGER);
+    return symbol(sym.READINTEGER);
 }
 
 "ReadLine"{WhiteSpace} | "ReadLine"
@@ -271,7 +282,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 7;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is ReadLine";*/
-    return new Symbol(sym.READLINE);
+    return symbol(sym.READLINE);
 }
 
 "Malloc"{WhiteSpace} | "Malloc"
@@ -279,7 +290,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 5;
     whites = blankSpaces(yytext().length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is Malloc";*/
-    return new Symbol(sym.MALLOC);
+    return symbol(sym.MALLOC);
 }
 
 <YYINITIAL>"\[\]"
@@ -287,7 +298,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'[]'";*/
-    return new Symbol(sym.TWOBRACK);
+    return symbol(sym.TWOBRACK);
 }
 
 <YYINITIAL>"\{\}"
@@ -295,7 +306,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'{}'";*/
-    return new Symbol(sym.TWOCURLY);
+    return symbol(sym.TWOCURLY);
 }
 
 <YYINITIAL>"\(\)"
@@ -303,7 +314,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'()'";*/
-    return new Symbol(sym.TWOPAR);
+    return symbol(sym.TWOPAR);
 }
 
 "%"
@@ -311,7 +322,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.PERCENT);
+    return symbol(sym.PERCENT);
 }
 
 "<"
@@ -319,7 +330,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.LESST);
+    return symbol(sym.LESST);
 }
 
 ">"
@@ -327,7 +338,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.GREATT);
+    return symbol(sym.GREATT);
 }
 
 "=="
@@ -336,7 +347,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
-    return new Symbol(sym.COMPEQUALS);
+    return symbol(sym.COMPEQUALS);
 }
 
 "="
@@ -344,7 +355,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.EQUALS);
+    return symbol(sym.EQUALS);
 }
 
 "!"
@@ -352,7 +363,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.EXCLA);
+    return symbol(sym.EXCLA);
 }
 
 ";"
@@ -360,7 +371,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.PAC);
+    return symbol(sym.PAC);
 }
 
 "["
@@ -368,7 +379,7 @@ MultilineComment = ("/*"~"*/")
      /*token = yytext();
      whites = blankSpaces(1);
      return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-     return new Symbol(sym.LEFTBRACKET);
+     return symbol(sym.LEFTBRACKET);
 }
 
 "]"
@@ -376,7 +387,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.RIGHTBRACKET);
+    return symbol(sym.RIGHTBRACKET);
 }
 
 "("
@@ -384,7 +395,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.LEFTPAR);
+    return symbol(sym.LEFTPAR);
 }
 
 ")"
@@ -392,7 +403,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.RIGHTPAR);
+    return symbol(sym.RIGHTPAR);
 }
 
 "{"
@@ -400,7 +411,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.LEFTCURLY);
+    return symbol(sym.LEFTCURLY);
 }
 
 "}"
@@ -408,7 +419,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.RIGHTCURLY);
+    return symbol(sym.RIGHTCURLY);
 }
 
 "\<="
@@ -417,7 +428,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed +  " is " + "'" + token + "'";*/
-    return new Symbol(sym.LESSEQ);
+    return symbol(sym.LESSEQ);
 }
 
 "\>="
@@ -426,7 +437,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
-    return new Symbol(sym.GTREQ);
+    return symbol(sym.GTREQ);
 }
 
 "!="
@@ -435,7 +446,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
-    return new Symbol(sym.DIFFERENT);
+    return symbol(sym.DIFFERENT);
 }
 
 "\/"
@@ -443,7 +454,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'" + token + "'";*/
-    return new Symbol(sym.DIV);
+    return symbol(sym.DIV);
 }
 
 "&&"
@@ -452,7 +463,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'" + token + "'";*/
-    return new Symbol(sym.AND);
+    return symbol(sym.AND);
 }
 
 \|\|
@@ -460,28 +471,28 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 1;
     whites = blankSpaces(2);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is " + "'||'";*/
-    return new Symbol(sym.OR);
+    return symbol(sym.OR);
 }
 
 "\+"
 {
     /*whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'+'";*/
-    return new Symbol(sym.ADD);
+    return symbol(sym.ADD);
 }
 
 "\-"
  {
      /*whites = blankSpaces(1);
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'-'";*/
-     return new Symbol(sym.MINUS);
+     return symbol(sym.MINUS);
  }
 
  "\*"
  {
      /*whites = blankSpaces(1);
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + " is " + "'*'";*/
-     return new Symbol(sym.MULT);
+     return symbol(sym.MULT);
  }
 
  // Hexadecimal 0x12aE
@@ -491,7 +502,7 @@ MultilineComment = ("/*"~"*/")
      fixed = token.length() - 1;
      whites = blankSpaces(token.length());
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is hexadecimal " + "(value = " + token + ")";*/
-     return new Symbol(sym.HEX, new Integer(Integer.parseInt("0x45E213".replace("0x",""), 16)));
+     return symbol(sym.DOUBLECONST, new Integer(Integer.parseInt("0x45E213".replace("0x",""), 16)));
  }
 
 "true"
@@ -499,7 +510,7 @@ MultilineComment = ("/*"~"*/")
     /*fixed = yycolumn + 3;
     whites = blankSpaces(4);
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = true)";*/
-    return new Symbol(sym.TRUE);
+    return symbol(sym.TRUE);
 }
 
 "false"
@@ -507,7 +518,7 @@ MultilineComment = ("/*"~"*/")
      /*fixed = yycolumn + 4;
      whites = blankSpaces(5);
      return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is boolConstant (value = false)";*/
-     return new Symbol(sym.FALSE);
+     return symbol(sym.FALSE);
 }
 
 <YYINITIAL>[0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
@@ -517,7 +528,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + token.length() - 1;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";*/
-    return new Symbol(sym.DOUBLECONST, new Double(Double.parseDouble(yytext())));
+    return symbol(sym.DOUBLECONST, new Double(Double.parseDouble(yytext())));
 }
 
 //[0-9][0-9]*"\."[0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)(\+|\-)[0-9][0-9]* | [0-9][0-9]*"\."[0-9][0-9]*(E|e)[0-9][0-9]*
@@ -527,7 +538,7 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + token.length() - 1;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is double (value = " + token + ")";*/
-    return new Symbol(sym.DOUBLECONST, new Double(Double.parseDouble(yytext())));
+    return symbol(sym.DOUBLECONST, new Double(Double.parseDouble(yytext())));
 }
 
 <YYINITIAL>"\."
@@ -535,7 +546,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(1);
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ".";*/
-    return new Symbol(sym.DOT);
+    return symbol(sym.DOT);
 }
 
 [A-Za-z][_A-Za-z0-9]* | [A-Za-z][_A-Za-z0-9]*{WhiteSpace}
@@ -544,10 +555,10 @@ MultilineComment = ("/*"~"*/")
     fixed = (token.length() == 1) ? (yycolumn) : yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
     if(yytext().length() <= 31)
-        return new Symbol(sym.IDENTIFIER, fixed);
+        return symbol(sym.IDENTIFIER, fixed);
         //return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier";
     else
-        return new Symbol(sym.IDENTIFIER, fixed);
+        return symbol(sym.IDENTIFIER, fixed);
         //return token + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is identifier (truncated)";
 }
 
@@ -555,7 +566,7 @@ MultilineComment = ("/*"~"*/")
 {
     /*errors.add("*** Error en linea " + yyline + " identificador inválido: " + yytext());
     return "*** Error en linea " + yyline + " identificador inválido: " + yytext();*/
-    return new Symbol(sym.ERROR);
+    return symbol(sym.ERROR);
 }
 
 <YYINITIAL>{WhiteSpace}*"\,"{WhiteSpace}*
@@ -563,7 +574,7 @@ MultilineComment = ("/*"~"*/")
     /*token = yytext();
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " col " + yycolumn + " is " + ",";*/
-    return new Symbol(sym.COMMA);
+    return symbol(sym.COMMA);
 }
 
 // string rules
@@ -573,16 +584,16 @@ MultilineComment = ("/*"~"*/")
     fixed = yycolumn + token.length() - 2;
     whites = blankSpaces(token.length());
     return yytext() + whites + "line " + yyline + " cols " + yycolumn + "-" + fixed + " is string constant (Value = " + yytext() + " )" ;*/
-    return new Symbol(sym.STRINGCONST);
+    return symbol(sym.STRINGCONST);
 }
 
 
 
 .
 {
-    /*errors.add("*** Error en linea " + yyline + " caracter no reconocido " + yytext());
-    return "*** Error en linea " + yyline + " caracter no reconocido " + yytext();*/
-    return new Symbol(sym.ERROR);
+    errors.add("*** Error en linea " + yyline + " caracter no reconocido " + yytext());
+    //return "*** Error en linea " + yyline + " caracter no reconocido " + yytext();
+    return symbol(sym.ERROR);
 }
 
 

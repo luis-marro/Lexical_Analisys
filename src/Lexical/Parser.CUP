@@ -2,27 +2,24 @@ package Lexical;
 
 import java_cup.runtime.*;
 import java.io.FileInputStream;
-import jave.io.InputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java_cup.runtime.Symbol;
 
 parser code {:
 
-    public void syntax_error(Symbol s){
-        System.out.println("Error de sintaxis en la linea " + (s.right+1) + " Token: " + s.value, null);
+    public ArrayList<String> syntaxErrors = new ArrayList<String>();
+
+    public void syntax_error(Symbol symb){
+        java_cup.runtime.Symbol s = (symb);
+        System.out.println("*** Error Sintactico. Linea: " + (s.left+1) + " Columna: " + (s.right+1) + ". Simbolo: \'" + s.value + "\' *** Mensaje Error: Simbolo no reconocido.");
+        syntaxErrors.add("*** Error Sintactico. Linea: " + (s.left+1) + " Columna: " + (s.right+1) + ". Simbolo: \'" + s.value + "\' *** Mensaje Error: Simbolo no reconocido.");
     }
 
-    public void unrecovered_syntax_error(Symbol s) throws
-        java.lang.Exception {
-            report_fatal_error("", null);
-    }
-
-    public void syntax_error(Symbol cur_token){
-    	System.err.println("Syntax error at "+cur_token);
-    }
-
-    public static parser getParser(String pPath) throws exception {
-        InputStream is = null;
-        is = new FileInputStream(pPath);
-        return new parser(new Yylez(is));
+    public void unrecovered_syntax_error(Symbol symb){
+        java_cup.runtime.Symbol s = (symb);
+        System.out.println("*** Error Sintactico No Recuperado. Linea: " + (s.left+1) + " Columna: " + (s.right+1) + ". Simbolo: \'" + s.value + "\' *** Mensaje Error: Simbolo no reconocido.");
+        syntaxErrors.add("*** Error Sintactico No Recuperado. Linea: " + (s.left+1) + " Columna: " + (s.right+1) + ". Simbolo: \'" + s.value + "\' *** Mensaje Error: Simbolo no reconocido.");
     }
 
 
@@ -35,44 +32,45 @@ terminal IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY;
 terminal PRINT, READINTEGER, READLINE, MALLOC, TWOBRACK, TWOCURLY, TWOPAR, PERCENT;
 terminal LESST, GREATT, EQUALS, EXCLA, PAC, LEFTBRACKET, RIGHTBRACKET, LEFTPAR, RIGHTPAR;
 terminal LEFTCURLY, RIGHTCURLY, LESSEQ, GTREQ, DIFFERENT, DIV, AND, OR, ADD, MINUS;
-terminal MULT, TRUE, FALSE, DOT, COMMA, ERROR, COMPEQUALS, GETBYTE, SETBYTE;
+terminal MULT, DOT, COMMA, COMPEQUALS, GETBYTE, SETBYTE, ERROR;
 
 /* Terminals that have values */
 terminal INTCONST;
 terminal DOUBLECONST;
 terminal IDENTIFIER;
 terminal STRINGCONST;
+terminal TRUE;
+terminal FALSE;
 
 /* Non Terminals*/
 non terminal program, decl, variableDecl, variable, type, functionDecl, decl_plus;
 non terminal formals, formalsExt, classDecl, extendedIdent, impl, idenPlus, augField;
 non terminal field, interfaceDecl, augPrototype, prototype, stmtBlock, variableDecAug;
-non terminal stmtAug, stmt, exprOpt, ifStmt, whileStmt, forStmt, returnStmt, breakStmt;
-non terminal printStmt, exprPlus, expr, lValue, call, libCall, actuals, constant, ifStmtD;
+non terminal stmtAug, stmt, ifStmt, elseStmt, whileStmt, forStmt, returnStmt, breakStmt;
+non terminal printStmt, exprPlus, expr, optionalExpr, lvalue, call, libCall, actuals, constant;
 
 /* Precedences */
-precedence left OR;
-precedence left AND;
-precedence left EQUALS, LESST, GREATT, LESSEQ, GTREQ;
-precedence nonassoc DIFFERENT, COMPEQUALS;
-precedence left ADD, MINUS;
-precedence left MULT, DIV, PERCENT;
+precedence left EQUALS;
+precedence left OR, AND;
+precedence nonassoc LESST, LESSEQ, GREATT, GTREQ, COMPEQUALS, DIFFERENT ;
+precedence left ADD, MINUS, MULT, DIV, PERCENT ;
 precedence nonassoc EXCLA;
 precedence nonassoc LEFTBRACKET, DOT;
 precedence nonassoc ELSE;
+precedence right COMMA;
 /* Grammar */
 
 start with program ;
 
-program ::= decl_plus ;
+program ::= decl decl_plus ;
 
-decl_plus ::= decl decl_plus
-                | decl;
+decl_plus ::= decl_plus decl
+            | /*Epsilon*/ ;
 
 decl ::= variableDecl
-         |  functionDecl
-         |  classDecl
-         |  interfaceDecl;
+            | functionDecl
+            | classDecl
+            | interfaceDecl ;
 
 variableDecl ::= variable PAC ;
 
@@ -82,135 +80,139 @@ type ::= INT
             | DOUBLE
             | BOOL
             | STRING
-            | IDENTIFIER TWOBRACK ;
+            | IDENTIFIER
+            | type TWOBRACK ;
 
 functionDecl ::= type IDENTIFIER LEFTPAR formals RIGHTPAR stmtBlock
-                | VOID IDENTIFIER LEFTPAR formals RIGHTPAR stmtBlock ;
+                    | VOID IDENTIFIER LEFTPAR formals RIGHTPAR stmtBlock
+                    | type IDENTIFIER TWOPAR stmtBlock
+                    | VOID IDENTIFIER TWOPAR stmtBlock;
 
-formals ::= formalsExt ;
+formals ::= variable formalsExt
+            | /*Epsilon */ ;
 
-formalsExt ::= variable
-                | variable COMMA formalsExt ;
+formalsExt ::= COMMA variable formalsExt
+                | /*Epsilon */ ;
 
-classDecl ::= CLASS IDENTIFIER extendedIdent impl LEFTBRACKET augField RIGHTBRACKET ;
+classDecl ::= CLASS IDENTIFIER extendedIdent impl LEFTCURLY augField RIGHTCURLY
+                | CLASS IDENTIFIER extendedIdent impl TWOBRACK ;
 
 extendedIdent ::= EXTENDS IDENTIFIER
-                |
-                ;
+                    | /*EPSILON */ ;
 
 impl ::= IMPLEMENTS idenPlus
-            |
-            ;
+            | /*EPSILON */ ;
 
 idenPlus ::= IDENTIFIER
-            | IDENTIFIER COMMA idenPlus ;
+                | idenPlus COMMA IDENTIFIER ;
 
-augField ::= field
-            | field augField
-            |
-            ;
+augField ::= augField field
+                | /*Epsilon */ ;
 
 field ::= variableDecl
-            | functionDecl ;
+                | functionDecl ;
 
-interfaceDecl ::= INTERFACE IDENTIFIER LEFTBRACKET augPrototype RIGHTBRACKET ;
+interfaceDecl ::= INTERFACE IDENTIFIER LEFTCURLY augPrototype RIGHTCURLY
+                    | INTERFACE IDENTIFIER TWOCURLY  ;
 
-augPrototype ::= prototype augPrototype
-            |
-            ;
+augPrototype ::= augPrototype prototype
+                    | /*Epsilon */ ;
 
-stmtBlock ::= LEFTBRACKET variableDecAug stmtAug RIGHTBRACKET
-            | LEFTBRACKET RIGHTBRACKET
-            | LEFTBRACKET stmtAug RIGHTBRACKET
-            | LEFTBRACKET variableDecAug RIGHTBRACKET;
+prototype ::= type IDENTIFIER LEFTPAR formals RIGHTPAR PAC
+                | VOID IDENTIFIER LEFTPAR formals RIGHTPAR PAC
+                | type IDENTIFIER TWOPAR PAC
+                | VOID IDENTIFIER TWOPAR PAC ;
 
-variableDecAug ::= variableDecl variableDecAug;
+stmtBlock ::= LEFTCURLY variableDecAug stmtAug RIGHTCURLY
+                | TWOBRACK ;
 
-stmtAug ::= stmt stmtAug;
+variableDecAug ::= variableDecAug variableDecl
+                    | /*Epsilon */ ;
 
-stmt ::= exprPlus PAC
-        | ifStmt
-        | whileStmt
-        | forStmt
-        | breakStmt
-        | returnStmt
-        | printStmt
-        | stmtBlock ;
-        
+stmtAug ::= stmt stmtAug
+            | /*Espsilon */ ;
 
-exprPlus ::= expr
-            |
-            ;
+stmt ::= expr PAC
+            | PAC
+            | ifStmt
+            | whileStmt
+            | forStmt
+            | breakStmt
+            | returnStmt
+            | printStmt
+            | stmtBlock ;
 
+ifStmt ::= IF LEFTPAR optionalExpr RIGHTPAR stmt elseStmt;
 
-ifStmt ::= IF LEFTPAR expr RIGHTPAR stmt ifStmtD;
+optionalExpr ::= expr
+                | /*Epsilon */ ;
 
-ifStmtD ::= ELSE stmt
-            |
-            ;
+elseStmt ::= ELSE stmt
+                | /*Epsilon */ ;
 
 whileStmt ::= WHILE LEFTPAR expr RIGHTPAR stmt ;
 
+forStmt ::= FOR LEFTPAR optionalExpr PAC expr PAC optionalExpr RIGHTPAR stmt ;
 
-forStmt::= FOR LEFTPAR exprPlus PAC expr PAC exprPlus RIGHTPAR stmt ;
-
-returnStmt ::= RETURN exprPlus ;
+returnStmt ::= RETURN optionalExpr PAC ;
 
 breakStmt ::= BREAK PAC ;
 
-printStmt ::= PRINT LEFTPAR exprOpt RIGHTPAR PAC ;
+printStmt ::= PRINT LEFTPAR expr exprPlus RIGHTPAR PAC ;
 
-exprOpt ::= expr COMMA exprOpt
-            | expr ;
+exprPlus ::= COMMA expr exprPlus
+                | /*Epsilon*/ ;
 
-expr ::= lValue EQUALS expr
-            | constant
-            | lValue
-            | THIS
-            | call
-            | LEFTPAR expr RIGHTPAR
-            | expr ADD expr %prec ADD
-            | expr MINUS expr %prec MINUS
-            | expr MULT expr %prec MULT
-            | expr DIV expr %prec DIV
-            | expr PERCENT expr %prec PERCENT
-            | MINUS expr %prec MINUS
-            | expr LESST expr
-            | expr LESSEQ expr
-            | expr GREATT expr
-            | expr GTREQ expr
-            | expr COMPEQUALS expr %prec COMPEQUALS
-            | expr DIFFERENT expr %prec DIFFERENT
-            | expr AND expr %prec AND
-            | expr OR expr %prec OR
-            | EXCLA expr %prec EXCLA
-            | NEW LEFTPAR IDENTIFIER RIGHTPAR
-            | NEWARRAY LEFTPAR expr COMMA type RIGHTPAR
-            | READINTEGER TWOPAR
-            | READLINE TWOPAR
-            | MALLOC LEFTPAR expr RIGHTPAR  ;
+expr ::= lvalue EQUALS expr
+                | constant
+                | lvalue
+                | THIS
+                | call
+                | LEFTPAR expr RIGHTPAR
+                | expr ADD expr
+                | expr MINUS expr
+                | expr MULT expr
+                | expr DIV expr
+                | expr PERCENT expr
+                | MINUS expr
+                | expr LESST expr
+                | expr LESSEQ expr
+                | expr GTREQ expr
+                | expr GREATT expr
+                | expr COMPEQUALS expr
+                | expr DIFFERENT expr
+                | expr AND expr
+                | expr OR expr
+                | EXCLA expr
+                | NEW LEFTPAR IDENTIFIER RIGHTPAR
+                | NEWARRAY LEFTPAR expr COMMA type RIGHTPAR
+                | READINTEGER TWOPAR
+                | READLINE TWOPAR
+                | MALLOC LEFTPAR expr RIGHTPAR ;
 
-lValue ::= IDENTIFIER
-            | expr DOT IDENTIFIER
-            | expr LEFTBRACKET expr RIGHTBRACKET ;
+lvalue ::= IDENTIFIER
+                | expr DOT IDENTIFIER
+                | expr LEFTBRACKET expr RIGHTBRACKET ;
 
 call ::= IDENTIFIER LEFTPAR actuals RIGHTPAR
-            | expr DOT IDENTIFIER LEFTPAR actuals RIGHTPAR
-            | expr DOT libCall LEFTPAR actuals RIGHTPAR;
+                | IDENTIFIER TWOPAR
+                | expr DOT IDENTIFIER LEFTPAR actuals RIGHTPAR
+                | expr DOT IDENTIFIER TWOPAR
+                | expr DOT libCall LEFTPAR actuals RIGHTPAR
+                | expr DOT libCall TWOPAR ;
 
 libCall ::= GETBYTE LEFTPAR expr RIGHTPAR
-            | SETBYTE LEFTPAR expr COMMA expr RIGHTPAR ;
+                | SETBYTE LEFTPAR expr COMMA expr RIGHTPAR ;
 
-actuals ::= exprOpt
-            |
-            ;
+actuals ::= expr exprPlus COMMA
+                | /*Epsilon */ ;
 
 constant ::= INTCONST
-            | DOUBLECONST
-            | STRINGCONST
-            | TRUE
-            | FALSE
-            | NULL;
+                | DOUBLECONST
+                | TRUE
+                | FALSE
+                | STRINGCONST
+                | NULL ;
 
 
 

@@ -26,29 +26,25 @@ public class Lexical {
     }
 
     // Method that analyzes a file collecting tokens until the end is reached.
-    public List<String> transform(String input) throws IOException{
+    public void transform(String input) throws IOException{
         FileManager manager = new FileManager();
-        List<String> output = new LinkedList<String>();
+        //List<java_cup.runtime.Symbol> output = new LinkedList<java_cup.runtime.Symbol>();
         manager.trimFile(input);
         finalPath = manager.getFinalPath();
         try{
             Yylex lex = new Yylex(new FileReader(input));
-            String token;
-            token = lex.yylex();
+            java_cup.runtime.Symbol token;
+            token = lex.next_token();
 
             while(token != null){
-                output.add(token);
-                if(token.contains("not closed comment"))
-                    break;
-                token = lex.yylex();
+                //output.add(token);
+                token = lex.next_token();
             }
             errors = lex.getError();
         }catch (IOException ex){
             System.out.println("Trono");
         }
 
-        manager.writeNewFile(input, output);
-        return output;
     }
 
 
